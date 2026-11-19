@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <!--
+    If you are serving your web app in a path other than the root, change the
+    href value below to reflect the base path you are serving from.
+
+    The path provided below has to start and end with a slash "/" in order for
+    it to work correctly.
+
+    For more details:
+    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
+
+    This is a placeholder for base href that will be replaced by the value of
+    the `--base-href` argument provided to `flutter build`.
+  -->
+  <base href="/hady-garage-web/">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#05090F">
+  <meta name="description" content="جراج هادي AI — منصة ذكية متكاملة لرحلة اختيار ومقارنة وتمويل وامتلاك السيارة في مصر.">
+
+  <!-- PWA / Mobile web app meta tags & icons -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="GarageHady">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png">
+
+  <title>جراج هادي AI — منصة اختيار وشراء وامتلاك السيارة</title>
+  <link rel="manifest" href="manifest.json">
+  <style>
+    html, body {
+      margin: 0;
+      height: 100%;
+      background-color: #05090F;
+      /* Lock the page viewport: iOS Safari would otherwise allow a
+         horizontal pan and, on an RTL document, start scrolled to the
+         right edge — pushing the Flutter canvas off-screen. */
+      overflow: hidden;
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      overscroll-behavior: none;
+    }
+    /* Give the rendering layer a full-width box with a left origin.
+       CanvasKit can grow its backing canvas to 140% of the view and draws
+       from its left edge. The inline glass pane inherits the RTL origin. */
+    flt-glass-pane {
+      display: block;
+      direction: ltr;
+    }
+    /* flutter/flutter#190483 — on WebKit the semantics host lands one
+       viewport off-screen and pushes the page horizontally. Anchor it. */
+    flt-semantics-host {
+      position: absolute !important;
+      left: 0 !important;
+      top: 0 !important;
+    }
+  </style>
+</head>
+<body>
+  <script>
+    // PWA install: stash the deferred prompt so the Dart side can trigger it.
+    window.__pwaPrompt = null;
+    window.addEventListener('beforeinstallprompt', function (e) {
+      e.preventDefault();
+      window.__pwaPrompt = e;
+      window.dispatchEvent(new Event('pwa-installable'));
+    });
+    window.addEventListener('appinstalled', function () {
+      window.__pwaPrompt = null;
+      window.dispatchEvent(new Event('pwa-installed'));
+    });
+    // flutter/flutter#196959 — the engine rewrites the viewport meta to
+    // maximum-scale=5.0, which lets iOS Safari auto-zoom on TextField
+    // focus and leaves the page shifted. Pin it back to 1.0 on iOS.
+    if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
+      new MutationObserver(function () {
+        var m = document.querySelector('meta[name="viewport"]');
+        if (m && m.content.indexOf('maximum-scale=1.0') === -1) {
+          m.setAttribute('content',
+            'width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover');
+        }
+      }).observe(document.head, { childList: true, subtree: true });
+    }
+  </script>
+  <script src="flutter_bootstrap.js" async></script>
+</body>
+</html>
